@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.List;
 import java.util.Map;
 
@@ -22,11 +23,9 @@ public class ProductoREST {
     @GetMapping(value = "/producto")
     public ResponseEntity<Map<String, List<Producto>>> getAllProducts() throws ProductoException {
 
-
         return new ResponseEntity<>(productoService.getAllProductos(), HttpStatus.OK);
 
     }
-
 
     @GetMapping(value= "/producto/{partNumber}")
     public ResponseEntity<Producto> getProductoByPartNumber(@PathVariable("partNumber") String partNumber) throws ProductoException {
@@ -36,13 +35,7 @@ public class ProductoREST {
     }
 
     @PostMapping(value = "/producto")
-    public void saveProducto(@RequestBody Producto producto) throws  ProductoException {
-
-        if(producto!= null){
+    public void saveProducto(@RequestBody Producto producto  ) throws  ProductoException {
             productoService.saveProducto(producto);
-        }else{
-
-            throw new ProductoException("", HttpStatus.BAD_REQUEST);
-        }
     }
 }

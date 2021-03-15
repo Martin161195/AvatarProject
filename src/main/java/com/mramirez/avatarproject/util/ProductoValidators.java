@@ -5,10 +5,35 @@ import com.mramirez.avatarproject.exception.ProductoException;
 import org.springframework.http.HttpStatus;
 
 
-//replaceAll("\\s", "")
+
 public class ProductoValidators {
 
-    public static boolean isValidTipoProduct(Producto producto) throws ProductoException {
+
+
+    public static boolean isValidProduct(Producto producto) throws ProductoException {
+        if(     !(isValidProductByPartNumber(producto.getPartNumber()) ) ||
+                (producto.getNombre()== null || producto.getNombre().isEmpty()  )  ||
+                (producto.getImagen()== null  || producto.getImagen().isEmpty() )  ||
+                !(isValidProductByTipoProduct(producto))
+        ){
+            throw new ProductoException(HttpStatus.BAD_REQUEST);
+        }
+
+        return  true;
+    }
+
+    public static boolean isValidProductByPartNumber(String s) throws ProductoException {
+
+        if(s == null || s.length() != 10){
+            throw new ProductoException("El Partnumber "+s+" debe tener 10 digitos", HttpStatus.BAD_REQUEST);
+        }
+
+        return true;
+
+    }
+
+
+    public static boolean isValidProductByTipoProduct(Producto producto) throws ProductoException {
 
         switch (producto.getTipoProducto().toLowerCase()){
             case "normal" :

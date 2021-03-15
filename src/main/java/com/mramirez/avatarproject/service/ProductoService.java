@@ -1,11 +1,11 @@
 package com.mramirez.avatarproject.service;
 
 
+import com.mramirez.avatarproject.dao.ProductoDAOImpl;
 import com.mramirez.avatarproject.domain.Producto;
 import com.mramirez.avatarproject.exception.ProductoException;
 import com.mramirez.avatarproject.util.ProductoValidators;
 
-import com.mramirez.avatarproject.repository.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -17,12 +17,12 @@ import java.util.*;
 public class ProductoService {
 
     @Autowired
-    private ProductoRepository productoRepository;
+    private ProductoDAOImpl productoDAO;
 
 
     public Producto getProductoByPartNumber(String partNumber) throws ProductoException {
 
-        Optional<Producto> productoOptional = productoRepository.findByPartNumber(partNumber);
+        Optional<Producto> productoOptional = productoDAO.findProductByPartNumber(partNumber);
 
         if(productoOptional.isPresent()){
 
@@ -41,7 +41,7 @@ public class ProductoService {
         Map<String, List<Producto>> productoMap = new HashMap<>();
 
         productoMap.put("productos", productoList);
-        productoRepository.findAll().iterator().forEachRemaining(productoList::add);
+        productoDAO.findAllProductos().iterator().forEachRemaining(productoList::add);
 
         if(productoList.isEmpty()){
 
@@ -52,12 +52,10 @@ public class ProductoService {
 
         }
 
-
-
     }
 
-
     public void saveProducto(Producto producto) throws ProductoException {
+
 
        if(isProductByPartNumberExist(producto.getPartNumber())){
 
@@ -65,18 +63,17 @@ public class ProductoService {
 
        }else{
 
-           if(ProductoValidators.isValidTipoProduct(producto)){
+           if(ProductoValidators.isValidProduct(producto)){
 
-               productoRepository.save(producto);
+               productoDAO.createProducto(producto);
            }
-
 
        }
     }
 
     public boolean isProductByPartNumberExist(String partNumber){
 
-        return productoRepository.existsByPartNumber(partNumber);
+        return productoDAO.existeProductoByPartNumber(partNumber);
 
     }
 }

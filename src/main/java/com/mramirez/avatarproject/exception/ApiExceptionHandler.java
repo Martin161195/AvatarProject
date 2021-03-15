@@ -2,16 +2,18 @@ package com.mramirez.avatarproject.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
 
 
     @ExceptionHandler(value = {ProductoException.class})
-    public ResponseEntity<Object> handlerApiRequestException(ProductoException productoException){
+    public ResponseEntity<Object> handlerProductoException(ProductoException productoException){
 
         if(productoException.getMessage()==null){
 
@@ -28,16 +30,12 @@ public class ApiExceptionHandler {
 
     }
 
-
-
-    @ExceptionHandler({org.springframework.http.converter.HttpMessageNotReadableException.class})
+    @ExceptionHandler(value = {HttpMessageNotReadableException.class })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public void badJsonHandler() {
+    public void badJsonHandler() { }
 
-    }
-
-    @ExceptionHandler({Exception.class})
+    @ExceptionHandler(value= {Exception.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public void genericErrorHandler(){}
+    public void genericException(){}
 
 }
